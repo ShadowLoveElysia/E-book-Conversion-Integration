@@ -176,7 +176,3 @@ This project relies on several excellent open-source libraries and tools:
 
 ### Special Thanks
 - **Calibre Team**: For providing the most comprehensive e-book conversion tools
-- **Open Source Community**: For maintaining and improving these essential libraries
-- **Contributors**: Everyone who has helped improve this tool
-
-This tool would not be possible without the excellent work of these open-source projects and their maintainers.
