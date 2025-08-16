@@ -21,6 +21,9 @@ A powerful Python tool for batch converting various document formats into differ
 - **Automatic Calibre Integration**: Automatic download and setup of Calibre tools
 - **Quality Control**: Adjustable image quality settings
 
+## v0.0.2 (Updated on 8/16/2025)
+- **Enhanced Interactive Mode:** Before processing, the script now provides a detailed file summary (total count, format breakdown) and allows you to selectively ignore files with decimal numbers in their names.
+- **Robust Error Handling:** When a file conversion fails in interactive mode, you now have the option to **Retry** the conversion, **Skip** the problematic file, or **Abort** the process, preventing a single bad file from halting the entire batch.
 ## Installation
 
 ### Prerequisites
