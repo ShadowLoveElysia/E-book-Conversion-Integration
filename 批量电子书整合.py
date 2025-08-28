@@ -20,6 +20,8 @@ aponiaRequests = None
 villVTqdm = None
 kalpasNatsort = None
 
+kiana_custom_calibre_path = None # USER-CONFIGURED: DO NOT CHANGE MANUALLY
+
 FORMAT_CHOICE_MAP = {
     '1': 'epub', '2': 'pdf', '3': 'cbz', '4': 'mobi', '5': 'azw3', '6': 'docx',
     '7': 'txt', '8': 'kepub', '9': 'fb2', '10': 'lit', '11': 'lrf',
@@ -35,7 +37,7 @@ STRINGS = {
     'prompt_main_menu': {'zh': "\n欢迎使用！请选择操作模式:\n  1) 控制台交互模式\n  2) 查看所有参数说明\n  3) 退出\n请输入选项 (1, 2 或 3):", 'en': "\nWelcome! Please select an operation mode:\n  1) Interactive Console Mode\n  2) View All Parameter Help\n  3) Exit\nEnter your choice (1, 2 or 3):", 'ja': "\nようこそ！操作モードを選択してください:\n  1) 対話型コンソールモード\n  2) すべてのパラメータヘルプを表示\n  3) 終了\n選択肢（1、2、または3）を入力してください:"},
     'prompt_language_select': {'zh': "请选择后续提示的语言 (zh, en, ja):", 'en': "Please select a language for subsequent prompts (zh, en, ja):", 'ja': "後続のプロンプトの言語を選択してください (zh, en, ja):"},
     'prompt_input_path': {'zh': "请输入包含源文件（PDF, CBZ, EPUB等）的文件夹路径:", 'en': "Please enter the path to the folder containing source files (PDFs, CBZs, EPUBs, etc.):", 'ja': "ソースファイル（PDF、CBZ、EPUBなど）が含まれるフォルダのパスを入力してください:"},
-    'multi_folder_tip': {'zh': "提示：若要一次性处理多个文件夹，请使用命令行参数模式 (例如: python 批量电子书整合.py -p C:\\A C:\\B ...)。", 'en': "Tip: To process multiple folders at once, please use the command-line argument mode (e.g., python 批量电子书整合.py -p C:\\A C:\\B ...).", 'ja': "ヒント：一度に複数のフォルダを処理するには、コマンドライン引数モードを使用してください (例: 批量电子书整合.py -p C:\\A C:\\B ...)。"},
+    'multi_folder_tip': {'zh': "提示：若要一次性处理多个文件夹，请使用命令行参数模式 (例如: python your_script.py -p C:\\A C:\\B ...)。", 'en': "Tip: To process multiple folders at once, please use the command-line argument mode (e.g., python your_script.py -p C:\\A C:\\B ...).", 'ja': "ヒント：一度に複数のフォルダを処理するには、コマンドライン引数モードを使用してください (例: python your_script.py -p C:\\A C:\\B ...)。"},
     'warn_multi_folder_output_ignored': {'zh': "警告：在多文件夹模式下，-o/--output 参数 '{}' 将被忽略，以防止文件覆盖。将使用文件夹名称作为输出文件名。", 'en': "Warning: In multi-folder mode, the -o/--output argument '{}' is ignored to prevent file overwrites. Folder names will be used for output files.", 'ja': "警告：複数フォルダモードでは、-o/--output引数「{}」はファイルの上書きを防ぐために無視されます。フォルダ名が出力ファイル名として使用されます。"},
     'warn_multi_folder_title_ignored': {'zh': "警告：在多文件夹模式下，-t/--title 参数 '{}' 将被忽略。将使用文件夹名称作为标题。", 'en': "Warning: In multi-folder mode, the -t/--title argument '{}' is ignored. Folder names will be used for titles.", 'ja': "警告：複数フォルダモードでは、-t/--title引数「{}」は無視されます。フォルダ名がタイトルとして使用されます。"},
     'detected_folder_type': {'zh': "检测到文件夹主要包含 '{}' 文件。将首先将它们批量整合成一个临时的EPUB文件。", 'en': "Detected folder primarily contains '{}' files. They will be consolidated into a single temporary EPUB file first.", 'ja': "フォルダに主に「{}」ファイルが含まれていることが検出されました。最初にこれらを単一の一時的なEPUBに統合します。"},
@@ -158,7 +160,11 @@ Your choice:""",
         'zh': "文件 '{}' 转换失败。请选择操作 (r = 重试, s = 跳过, a = 中止): ",
         'en': "Conversion failed for file '{}'. Choose an action (r = retry, s = skip, a = abort): ",
         'ja': "ファイル「{}」の変換に失敗しました。アクションを選択してください (r = 再試行, s = スキップ, a = 中止): "
-    }
+    },
+    'prompt_specify_calibre_path': {'zh': "在您的系统中找不到Calibre。是否要指定一个自定义的Calibre安装路径? (y/n):", 'en': "Calibre not found on your system. Would you like to specify a custom path to your Calibre installation? (y/n):", 'ja': "システムにCalibreが見つかりません。カスタムのCalibreインストールパスを指定しますか？ (y/n):"},
+    'prompt_enter_calibre_path': {'zh': "请输入您的Calibre安装文件夹的完整路径 (例如: C:\Program Files\Calibre2):", 'en': "Please enter the full path to your Calibre installation folder (e.g., C:\Program Files\Calibre2):", 'ja': "Calibreインストールフォルダへのフルパスを入力してください（例：C:\Program Files\Calibre2）："},
+    'warn_custom_path_set': {'zh': "警告：指定自定义路径后，脚本将始终使用此路径，自动搜索功能将失效。如果与他人分享此脚本，他们可能需要修改此路径。\n路径已成功验证并保存。请重新启动脚本以使更改生效。", 'en': "Warning: After setting a custom path, the script will always use it, and the auto-search feature will be disabled. If you share this script, others may need to change this path.\nThe path has been successfully validated and saved. Please restart the script for the changes to take effect.", 'ja': "警告：カスタムパスを設定すると、スクリプトは常にこのパスを使用し、自動検索機能は無効になります。このスクリプトを他の人と共有する場合、彼らはこのパスを変更する必要があるかもしれません。\nパスは正常に検証され、保存されました。変更を有効にするためにスクリプトを再起動してください。"},
+    'error_invalid_calibre_path': {'zh': "错误：提供的路径无效或在该路径下找不到Calibre工具 '{}'。请重试。", 'en': "Error: The provided path is invalid or the Calibre tool '{}' was not found in that path. Please try again.", 'ja': "エラー：指定されたパスが無効か、そのパスにCalibreツール「{}」が見つかりませんでした。再試行してください。"}
 }
 
 def checkDependencies():
@@ -203,23 +209,17 @@ def checkDependencies():
     kalpasNatsort = globals().get('natsort')
 
 def getLatestCalibrePortableUrl(languageCode):
-    kalpasDownloadPageUrl = "https://calibre-ebook.com/download_portable"
-    try:
-        aponiaResponse = aponiaRequests.get(kalpasDownloadPageUrl, timeout=10)
-        aponiaResponse.raise_for_status()
-        pageHtml = aponiaResponse.text
-        
-        suUrlMatch = re.search(r'href="(https://download\.calibre-ebook\.com/\d+\.\d+\.\d+/calibre-portable-64bit-\d+\.\d+\.\d+\.exe)"', pageHtml)
-        if suUrlMatch:
-            return suUrlMatch.group(1)
-        else:
-            print(STRINGS['download_url_fail'][languageCode])
-            return None
-    except aponiaRequests.exceptions.RequestException as requestError:
-        print(f"{STRINGS['get_version_fail'][languageCode]}: {requestError}")
-        return None
+    # This URL is now locked as per user request.
+    # The previous implementation was fetching this URL and then trying to parse it, which was incorrect.
+    return "https://download.calibre-ebook.com/8.9.0/calibre-portable-installer-8.9.0.exe"
+
 
 def getCalibreToolPath(toolName):
+    if kiana_custom_calibre_path and os.path.isdir(kiana_custom_calibre_path):
+        custom_tool_path = os.path.join(kiana_custom_calibre_path, toolName)
+        if os.path.exists(custom_tool_path):
+            return custom_tool_path
+
     try:
         sakuraScriptDirectory = os.path.dirname(__file__)
     except NameError: 
@@ -320,6 +320,50 @@ def ensureCalibreTool(toolName, languageCode, isInteractive=True):
     
     if isInteractive:
         print(STRINGS['calibre_needed'][languageCode])
+
+        while True:
+            userChoice = input(STRINGS['prompt_specify_calibre_path'][languageCode]).strip().lower()
+            if userChoice in ['y', 'yes']:
+                customPath = input(STRINGS['prompt_enter_calibre_path'][languageCode]).strip().replace('"', '')
+                
+                if os.path.isdir(customPath) and os.path.exists(os.path.join(customPath, toolName)):
+                    try:
+                        try:
+                            script_path = os.path.abspath(__file__)
+                        except NameError:
+                            script_path = os.path.abspath(sys.argv[0])
+                        
+                        with open(script_path, 'r', encoding='utf-8') as f:
+                            script_content = f.read()
+                        
+                        escaped_path = repr(customPath)
+                        
+                        new_content = re.sub(
+                            r"kiana_custom_calibre_path = None",
+                            f"kiana_custom_calibre_path = {escaped_path}",
+                            script_content,
+                            count=1
+                        )
+                        
+                        if new_content != script_content:
+                            with open(script_path, 'w', encoding='utf-8') as f:
+                                f.write(new_content)
+                            print(STRINGS['warn_custom_path_set'][languageCode])
+                            sys.exit(0)
+                        else:
+                            print("Error: Could not find the placeholder to update the path in the script.")
+                            return None
+                    except Exception as e:
+                        print(f"An error occurred while saving the path: {e}")
+                        return None
+                else:
+                    print(STRINGS['error_invalid_calibre_path'][languageCode].format(toolName))
+            
+            elif userChoice in ['n', 'no']:
+                break
+            else:
+                print(STRINGS['error_invalid_choice'][languageCode])
+
         print(STRINGS['calibre_tool_missing_specific'][languageCode].format(toolName))
         while True:
             print(STRINGS['prompt_calibre_download'][languageCode])
